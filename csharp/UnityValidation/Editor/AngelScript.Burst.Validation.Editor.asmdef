@@ -1,0 +1,17 @@
+{
+  "name": "AngelScript.Burst.Validation.Editor",
+  "rootNamespace": "AngelScript.Burst.Validation.Editor",
+  "references": [
+    "AngelScript.Burst.Core",
+    "AngelScript.Burst.Compiler",
+    "AngelScript.Burst.Unity",
+    "Unity.Burst",
+    "Unity.Collections",
+    "AngelScript.Burst.Validation"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "allowUnsafeCode": true,
+  "autoReferenced": true
+}

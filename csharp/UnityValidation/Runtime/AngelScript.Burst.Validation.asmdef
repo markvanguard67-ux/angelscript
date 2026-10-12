@@ -1,0 +1,13 @@
+{
+  "name": "AngelScript.Burst.Validation",
+  "rootNamespace": "AngelScript.Burst.Validation",
+  "references": [
+    "AngelScript.Burst.Core",
+    "AngelScript.Burst.Compiler",
+    "AngelScript.Burst.Unity",
+    "Unity.Burst",
+    "Unity.Collections"
+  ],
+  "allowUnsafeCode": true,
+  "autoReferenced": true
+}

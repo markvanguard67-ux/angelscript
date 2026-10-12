@@ -1,0 +1,8 @@
+{
+  "name": "AngelScript.Burst.Compiler",
+  "rootNamespace": "AngelScript.Burst.Compilation",
+  "references": ["AngelScript.Burst.Core"],
+  "allowUnsafeCode": false,
+  "autoReferenced": true,
+  "noEngineReferences": true
+}

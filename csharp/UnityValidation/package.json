@@ -1,0 +1,11 @@
+{
+  "name": "com.angelscript.burst.validation",
+  "version": "0.1.0",
+  "displayName": "AngelScript Validation Laboratory",
+  "description": "Separate development-only validation scene, native-oracle corpus, Burst/job probes and full-port readiness ledger. Not a certification of full AngelScript conformance.",
+  "unity": "2022.3",
+  "license": "Zlib",
+  "dependencies": {
+    "com.angelscript.burst": "0.1.0"
+  }
+}

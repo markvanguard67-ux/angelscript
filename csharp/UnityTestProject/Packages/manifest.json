@@ -1,0 +1,13 @@
+{
+  "dependencies": {
+    "com.angelscript.burst": "file:../../UnityPackage",
+    "com.unity.test-framework": "1.1.33",
+    "com.angelscript.burst.validation": "file:../../UnityValidation",
+    "com.unity.modules.imgui": "1.0.0",
+    "com.unity.modules.physics": "1.0.0"
+  },
+  "testables": [
+    "com.angelscript.burst",
+    "com.angelscript.burst.validation"
+  ]
+}

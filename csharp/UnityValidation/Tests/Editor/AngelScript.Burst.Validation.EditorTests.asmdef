@@ -1,0 +1,23 @@
+{
+  "name": "AngelScript.Burst.Validation.EditorTests",
+  "references": [
+    "AngelScript.Burst.Core",
+    "AngelScript.Burst.Compiler",
+    "AngelScript.Burst.Unity",
+    "Unity.Burst",
+    "Unity.Collections",
+    "AngelScript.Burst.Validation",
+    "AngelScript.Burst.Validation.Editor"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "optionalUnityReferences": [
+    "TestAssemblies"
+  ],
+  "defineConstraints": [
+    "UNITY_INCLUDE_TESTS"
+  ],
+  "allowUnsafeCode": true,
+  "autoReferenced": false
+}

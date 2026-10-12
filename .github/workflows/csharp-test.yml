@@ -1,0 +1,40 @@
+name: C# compiler and VM
+permissions:
+  contents: read
+
+on:
+  push:
+    paths:
+      - 'csharp/**'
+      - 'sdk/angelscript/**'
+      - 'sdk/add_on/**'
+      - '.github/workflows/csharp-test.yml'
+  pull_request:
+    paths:
+      - 'csharp/**'
+      - 'sdk/angelscript/**'
+      - 'sdk/add_on/**'
+      - '.github/workflows/csharp-test.yml'
+
+jobs:
+  portable-and-native-oracle:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - name: Build original engine reference runner
+        run: ./csharp/scripts/build-reference.sh
+      - name: Compile C# and run regression/differential tests
+        run: >-
+          dotnet run --project csharp/Tests/AngelScript.Tests.csproj -c Release --
+          --reference csharp/Tests/bin/reference-runner --seeds 500
+      - name: Verify the Unity test-result gate (does not run Unity)
+        run: python3 csharp/Tests/test_unity_results.py
+      - name: Build native validation oracle and verify checked-in scene corpus
+        run: |
+          ./csharp/scripts/build-validation-reference.sh
+          python3 csharp/UnityValidation/Tools~/generate_corpus.py --check
+      - name: Verify validation report tooling (does not run Unity)
+        run: python3 csharp/Tests/test_validation_report.py

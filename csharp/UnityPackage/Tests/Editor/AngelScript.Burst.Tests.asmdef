@@ -1,0 +1,16 @@
+{
+  "name": "AngelScript.Burst.Tests",
+  "rootNamespace": "AngelScript.Burst.Tests",
+  "references": [
+    "AngelScript.Burst.Core",
+    "AngelScript.Burst.Compiler",
+    "AngelScript.Burst.Unity",
+    "Unity.Burst",
+    "Unity.Collections"
+  ],
+  "includePlatforms": ["Editor"],
+  "optionalUnityReferences": ["TestAssemblies"],
+  "defineConstraints": ["UNITY_INCLUDE_TESTS"],
+  "allowUnsafeCode": true,
+  "autoReferenced": false
+}

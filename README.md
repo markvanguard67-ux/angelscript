@@ -5,3 +5,9 @@ The AngelCode Scripting Library, or AngelScript as it is also known, is an extre
 The official repository for AngelScript is: https://github.com/anjo76/angelscript
 
 Please go to https://www.angelcode.com/angelscript for more information.
+
+## Experimental C# / Unity Burst implementation
+
+This fork also contains an **unofficial C# implementation of a primitive AngelScript subset** in [`csharp/`](csharp/README.md), with an unmanaged bytecode VM and Unity parallel-job adapter. It is not a complete port or the upstream AngelCode library; the original C++ SDK is unchanged. See the [C# guide](csharp/README.md) for supported features, installation, tests, and the current Unity/Burst verification limits.
+
+For a runnable Unity test scene, native-oracle fixtures, Burst/job checks and the full-port gap ledger, see [the validation laboratory](csharp/UnityValidation/README.md).

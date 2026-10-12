@@ -1,0 +1,19 @@
+{
+  "name": "com.angelscript.burst",
+  "version": "0.1.0",
+  "displayName": "AngelScript Burst (experimental C# subset)",
+  "description": "Unofficial C# primitive AngelScript compiler and unmanaged bytecode VM for Unity Burst and parallel jobs. Not a full AngelScript port.",
+  "unity": "2022.3",
+  "license": "Zlib",
+  "dependencies": {
+    "com.unity.burst": "1.8.18",
+    "com.unity.collections": "2.1.4"
+  },
+  "samples": [
+    {
+      "displayName": "Parallel simulation",
+      "description": "Compile once and execute independently on many entities, with an unmanaged host binding example.",
+      "path": "Samples~/ParallelSimulation"
+    }
+  ]
+}

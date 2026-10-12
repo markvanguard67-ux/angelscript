@@ -16,6 +16,7 @@
 
 # Compiled Dynamic libraries
 *.so
+*.so.*
 *.dylib
 *.dll
 
@@ -81,4 +82,21 @@ sdk/docs/manual/
 # Exclude AngelScript debug output files
 AS_DEBUG/
 
+# C# port and Unity generated files
+csharp/**/bin/
+csharp/**/obj/
+csharp/**/Library/
+csharp/**/Temp/
+csharp/**/TestResults/
+csharp/**/UserSettings/
+*.csproj.user
+core
+core.*
 
+# Portable Python test tooling caches
+__pycache__/
+*.py[cod]
+
+# Validation player and local reports
+csharp/**/Builds/
+csharp/UnityValidation/bin/

@@ -1,0 +1,6 @@
+{
+  "name": "AngelScript.ParallelSimulation",
+  "references": ["AngelScript.Burst.Core", "AngelScript.Burst.Compiler", "AngelScript.Burst.Unity", "Unity.Collections"],
+  "allowUnsafeCode": true,
+  "autoReferenced": true
+}

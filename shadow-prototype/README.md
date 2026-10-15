@@ -92,7 +92,10 @@ toggleable in the panel so the difference stays inspectable:
   flattening the whole roof into one edge. A small per-column north spread
   (`project depth`) gives billboards a footprint so a due-east sun does not
   collapse them to a 1-pixel line, and a per-column fill bridges vertical
-  gaps. The chapel and all trees use it; force it on everything with the
+  gaps. Because a raking sun can otherwise leave a lit wedge between the
+  base and the thrown slab, every footprint column is additionally anchored
+  to the object's ground line, so the shadow always reads as falling *from*
+  the base. The chapel and all trees use it; force it on everything with the
   *shadow construction* select to see why graves do not need it.
 - **Self-shadow exclusion.** Before the object pass, each visible caster's
   own slots are re-rasterised into a private coverage buffer clipped to the
@@ -100,7 +103,9 @@ toggleable in the panel so the difference stays inspectable:
   divided back out (`others = 1 − (1 − total)/(1 − own)`), so the drop shadow
   only darkens the ground and whatever stands in it — never the caster that
   threw it. The ground keeps the full mask. `self shadow` in the panel
-  re-enables the naive behaviour for comparison.
+  re-enables the naive behaviour for comparison — while it is on, a red
+  warning line is drawn into the pixel buffer so the demo state is
+  unmistakable in any screenshot.
 
 `shadow construction: auto` (the default) honours each asset's declared style;
 `blob` and `project` override globally. The inspector's slot readout shows

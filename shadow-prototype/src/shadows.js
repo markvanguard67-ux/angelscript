@@ -506,6 +506,25 @@ export class ShadowSystem {
         }
       }
     }
+    // Base anchoring: every column of the footprint must keep shadow contact
+    // with the object's ground line. Without this, a raking sun leaves a lit
+    // wedge between the base and the thrown silhouette slab, and the shadow
+    // reads as a decal floating beside the object instead of falling from it.
+    {
+      const footHalf = Math.max(6, w * 0.5 - 2);
+      const anchorY = Math.min(y1, Math.round(baseSY));
+      const lx = Math.max(x0, Math.round(baseSX - footHalf));
+      const rx = Math.min(x1, Math.round(baseSX + footHalf));
+      for (let i = 0; i < nT; i++) {
+        const sx = touched[i];
+        if (sx < lx || sx > rx) continue;
+        const ya = Math.max(y0, lastY[sx]);
+        for (let yy = ya; yy <= anchorY; yy++) {
+          const p = yy * W + sx;
+          target[p] += alpha * (1 - target[p]);
+        }
+      }
+    }
     for (let i = 0; i < nT; i++) lastY[touched[i]] = -1;
 
     // debug quad: the sheared footprint parallelogram

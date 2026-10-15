@@ -6,7 +6,7 @@
  * per-pixel work in the JavaScript passes — there is no GPU in this prototype.
  */
 // Stamp shown in the HUD so a stale (cached) page is recognisable at a glance.
-const BUILD = 'r3 · projection + self-shadow fix';
+const BUILD = 'r4 · grounded projection + state warnings';
 
 
 import { buildAssets } from './sprites.js';

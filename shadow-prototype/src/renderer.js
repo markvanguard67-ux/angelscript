@@ -697,6 +697,17 @@ export class Renderer {
   }
 
   drawDebug() {
+    // State warnings baked into the pixel buffer: toggles that re-create the
+    // original bugs must be visible in any screenshot, crop or capture.
+    let wy = 3;
+    if (this.settings.selfShadow) {
+      drawText(this.out, 'SELF-SHADOW ON: CASTERS DARKEN THEMSELVES (DEMO TOGGLE IN PANEL)', 3, wy, [255, 110, 80], 240);
+      wy += 7;
+    }
+    if (this.settings.shadowStyle && this.settings.shadowStyle !== 'auto') {
+      drawText(this.out, `SHADOW CONSTRUCTION OVERRIDE: ${this.settings.shadowStyle.toUpperCase()} (AUTO = PER-ASSET)`, 3, wy, [255, 190, 80], 240);
+      wy += 7;
+    }
     const dbg = this.settings.debug;
     const s = this.scene;
     const out = this.out;

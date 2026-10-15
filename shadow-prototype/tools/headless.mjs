@@ -97,6 +97,14 @@ const shots = [
   ['19-chapel-project-all', { timeOfDay: 0.70, keeperAt: [330, 200], settings: { shadowStyle: 'project' } }],
   ['20-chapel-selfshadow', { timeOfDay: 0.70, keeperAt: [330, 200], settings: { selfShadow: true } }],
   ['21-trees-morning', { timeOfDay: 0.33, keeperAt: [150, 170] }],
+  ['22-chapel-day-auto', { timeOfDay: 0.62, keeperAt: [352, 148] }],
+  ['23-chapel-day-selfshadow', { timeOfDay: 0.62, keeperAt: [352, 148], settings: { selfShadow: true } }],
+  ['24-chapel-day-sunonly', { timeOfDay: 0.62, keeperAt: [352, 148], shadowCfg: { maxDynamic: 0 } }],
+  ['25-chapel-day-blob', { timeOfDay: 0.62, keeperAt: [352, 148], settings: { shadowStyle: 'blob' } }],
+  ['26-chapel-morning-auto', { timeOfDay: 0.40, keeperAt: [352, 148] }],
+  ['27-chapel-morning-selfshadow', { timeOfDay: 0.40, keeperAt: [352, 148], settings: { selfShadow: true } }],
+  ['28-chapel-morning-sunonly', { timeOfDay: 0.40, keeperAt: [352, 148], shadowCfg: { maxDynamic: 0 } }],
+  ['29-chapel-morning-mask', { timeOfDay: 0.40, keeperAt: [352, 148], settings: { view: 'shadows' } }],
 ];
 
 for (const [name, opts] of shots) shoot(name, opts);

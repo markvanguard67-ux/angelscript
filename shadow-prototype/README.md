@@ -26,6 +26,16 @@ node tools/headless.mjs          # 17 shots + sanity asserts
 node tools/headless.mjs --bench  # frame-time / cache / broad-phase benchmark
 ```
 
+## What it looks like
+
+| golden hour — long sun shadows from every prop | night — torch/lamp pools cut by shadows |
+| --- | --- |
+| ![golden hour](docs/hero-golden-hour.png) | ![night](docs/night-lamps.png) |
+
+| the shadow coverage mask (what the raster stage outputs) | 100% fog with altitude simulation |
+| --- | --- |
+| ![shadow mask](docs/shadow-mask.png) | ![fog](docs/fog-altitude.png) |
+
 ## What is implemented, quote by quote
 
 | Article | Implementation |

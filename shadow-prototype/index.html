@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pixel-art dynamic shadows — Graveyard Keeper technique prototype</title>
+<link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+<div class="app">
+
+  <header class="top">
+    <div class="titles">
+      <h1>Pixel-art dynamic shadow generator</h1>
+      <p>
+        A JavaScript prototype of the shadow technique from
+        <a href="https://www.gamedeveloper.com/programming/graveyard-keeper-how-the-graphics-effects-are-made"
+           target="_blank" rel="noopener">“Graveyard Keeper: how the graphics effects are made”</a>
+        — shadow <em>sprites</em> rotating around a pivot, max 4 per object (1 sun + 3 nearest lights),
+        the rotation parameter smuggled through a vertex <em>colour channel</em>, plus the surrounding
+        pipeline: ambient light, LUT colour correction, normal maps, 3D light distribution, altitude fog.
+      </p>
+    </div>
+    <div class="hud">
+      <div><span>fps</span><b id="hud-fps">–</b></div>
+      <div><span>cpu frame</span><b id="hud-frame">–</b></div>
+      <div><span>world clock</span><b id="hud-time">–</b></div>
+    </div>
+  </header>
+
+  <div class="layout">
+
+    <!-- ============================================================ stage -->
+    <section class="stage">
+      <div class="screen">
+        <canvas id="view" width="320" height="180"></canvas>
+        <div class="hint">
+          drag a lamp/torch &nbsp;·&nbsp; shift+click drops a torch &nbsp;·&nbsp; WASD walks the keeper
+          &nbsp;·&nbsp; click an object to inspect its shadow slots &nbsp;·&nbsp; wheel = radius, shift+wheel = height
+        </div>
+      </div>
+
+      <div class="stage-bar">
+        <div class="group-buttons" id="view-buttons">
+          <button data-view="final" class="active">final</button>
+          <button data-view="shadows">shadow mask</button>
+          <button data-view="lights">light pools</button>
+          <button data-view="normals">normal maps</button>
+          <button data-view="altitude">altitude (fog)</button>
+        </div>
+        <div class="group-buttons" id="time-presets">
+          <button data-preset="dawn">dawn</button>
+          <button data-preset="noon">noon</button>
+          <button data-preset="dusk">dusk</button>
+          <button data-preset="night">night</button>
+        </div>
+        <div class="time-control">
+          <label>time of day <output data-out="timeOfDay"></output></label>
+          <input id="time-slider" type="range" min="0" max="1" step="0.0005" data-bind="timeOfDay">
+          <div class="row">
+            <label>speed <output data-out="timeSpeed"></output></label>
+            <input type="range" min="0" max="0.06" step="0.001" data-bind="timeSpeed">
+            <button id="btn-pause" class="mini">pause</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="columns">
+        <div class="card">
+          <h3>frame budget <small>ms per pass, 320×180 CPU</small></h3>
+          <div id="hud-passes" class="bars"></div>
+        </div>
+        <div class="card">
+          <h3>shadow generator <small>the Update() loop</small></h3>
+          <div id="hud-shadows" class="kv"></div>
+        </div>
+        <div class="card">
+          <h3>caching <small>“works really fast”</small></h3>
+          <div id="hud-cache" class="kv"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>shadow slot inspector <small>vertex colour = R:angle G:length B:intensity A:width</small></h3>
+        <div id="inspector"><div class="empty">click an object in the scene</div></div>
+      </div>
+
+      <div class="card">
+        <h3>LUT colour correction <small>32×32×32 cube flattened to a 1024×32 strip</small></h3>
+        <canvas id="lut-strip" width="512" height="16"></canvas>
+        <div class="lut-meta">
+          <span id="lut-label">–</span>
+          <label>force style
+            <select id="lut-style"><option value="">(time of day)</option></select>
+          </label>
+          <label class="chk"><input type="checkbox" data-bind="settings.lut" checked> LUT enabled</label>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ panel -->
+    <aside class="panel">
+
+      <div class="card">
+        <h3>shadows <small>the article’s technique</small></h3>
+        <label class="chk"><input type="checkbox" data-bind="settings.shadows" checked> cast shadows</label>
+        <label>max dynamic shadows per object <output data-out="maxDynamic"></output>
+          <small>+1 sun slot = 4 total</small>
+          <input type="range" min="0" max="3" step="1" data-bind="maxDynamic">
+        </label>
+        <label>ground squash <output data-out="squashY"></output>
+          <small>“highly distorted vertically”</small>
+          <input type="range" min="0.15" max="1" step="0.01" data-bind="squashY">
+        </label>
+        <label>skew <output data-out="shadowCfg.skew"></output>
+          <small>the experiment the article abandoned</small>
+          <input type="range" min="-0.8" max="0.8" step="0.02" data-bind="shadowCfg.skew">
+        </label>
+        <label>shadow darkness <output data-out="settings.shadowDarkness"></output>
+          <input type="range" min="0" max="1" step="0.01" data-bind="settings.shadowDarkness">
+        </label>
+        <label>shadow width <output data-out="shadowCfg.widthScale"></output>
+          <input type="range" min="0.4" max="3" step="0.05" data-bind="shadowCfg.widthScale">
+        </label>
+        <label>sun shadow scale <output data-out="shadowCfg.sunShadowScale"></output>
+          <input type="range" min="0.2" max="2.5" step="0.05" data-bind="shadowCfg.sunShadowScale">
+        </label>
+        <label>length response <output data-out="shadowCfg.lengthResponse"></output>
+          <input type="range" min="0" max="2" step="0.05" data-bind="shadowCfg.lengthResponse">
+        </label>
+        <label>ambient lift <output data-out="shadowCfg.ambientLift"></output>
+          <input type="range" min="0" max="0.8" step="0.01" data-bind="shadowCfg.ambientLift">
+        </label>
+        <label class="chk"><input type="checkbox" data-bind="shadowCfg.pixelSnap" checked> snap pivots to the pixel grid</label>
+        <label>angle quantisation <output data-out="shadowCfg.angleQuantize"></output>°
+          <small>on top of the 8-bit colour channel</small>
+          <input type="range" min="0" max="45" step="1" data-bind="shadowCfg.angleQuantize">
+        </label>
+        <label>shadow model
+          <select data-bind="settings.shadowModel">
+            <option value="sprite">sprite (black quads, as shipped)</option>
+            <option value="physical">physical (blocks direct light only)</option>
+          </select>
+        </label>
+        <label class="chk"><input type="checkbox" data-bind="useGrid" checked> spatial grid broad phase
+          <small>“if I programmed it today”</small></label>
+      </div>
+
+      <div class="card">
+        <h3>lighting <small><span id="light-count">0</span> sources</small></h3>
+        <label class="chk"><input type="checkbox" data-bind="settings.normals" checked> normal maps</label>
+        <label class="chk"><input type="checkbox" data-bind="settings.light3D" checked> 3D light distribution</label>
+        <label>back-facing fade rate <output data-out="settings.backFadeRate"></output>
+          <small>light behind the sprite ⇒ fades fast</small>
+          <input type="range" min="0.02" max="0.6" step="0.01" data-bind="settings.backFadeRate">
+        </label>
+        <label class="chk"><input type="checkbox" data-bind="settings.glows" checked> additive lamp glows</label>
+        <label class="chk"><input type="checkbox" data-bind="settings.dither" checked> bayer dithering</label>
+        <label class="chk"><input type="checkbox" data-bind="settings.litCache" checked> lit-sprite cache</label>
+        <label>cache entries per sprite <output data-out="settings.cacheBudget"></output>
+          <input type="range" min="2" max="32" step="1" data-bind="settings.cacheBudget">
+        </label>
+        <div class="row">
+          <button id="btn-add-light" class="mini">+ torch at keeper</button>
+          <button id="btn-clear-lights" class="mini">clear loose lights</button>
+        </div>
+        <div id="light-list" class="lights"></div>
+      </div>
+
+      <div class="card">
+        <h3>atmosphere</h3>
+        <label>fog <output data-out="settings.fog"></output>
+          <small>0.42 ≈ normal, 1.0 = the article’s “extreme 100% fog”</small>
+          <input type="range" min="0" max="1" step="0.01" data-bind="settings.fog">
+        </label>
+        <label class="chk"><input type="checkbox" data-bind="settings.wind" checked> wind deformation</label>
+        <label>wind strength <output data-out="windStrength"></output>
+          <input type="range" min="0" max="2" step="0.05" data-bind="windStrength">
+        </label>
+      </div>
+
+      <div class="card">
+        <h3>debug overlay <small>keys in brackets</small></h3>
+        <div class="grid2">
+          <label class="chk"><input type="checkbox" data-bind="settings.debug.shadowQuads"> shadow quads <kbd>Q</kbd></label>
+          <label class="chk"><input type="checkbox" data-bind="settings.debug.lightRadii"> light radii <kbd>E</kbd></label>
+          <label class="chk"><input type="checkbox" data-bind="settings.debug.links"> light links <kbd>R</kbd></label>
+          <label class="chk"><input type="checkbox" data-bind="settings.debug.channels"> vertex colours <kbd>T</kbd></label>
+          <label class="chk"><input type="checkbox" data-bind="settings.debug.grid"> broad-phase grid <kbd>Y</kbd></label>
+          <label class="chk"><input type="checkbox" data-bind="settings.debug.pivots"> pivots <kbd>P</kbd></label>
+          <label class="chk"><input type="checkbox" data-bind="settings.debug.sunVector"> sun vector <kbd>U</kbd></label>
+        </div>
+        <div class="row">
+          <button id="btn-reset" class="mini">reset everything</button>
+        </div>
+      </div>
+
+      <div class="card notes">
+        <h3>how it maps to the article</h3>
+        <ol>
+          <li><b>Sprites rotating around a point.</b> Each caster owns a pivot at its feet; a black
+              shadow sprite is rotated around it. Skew is available and defaults to 0 — the author
+              tried it and dropped it.</li>
+          <li><b>4 shadows max.</b> Slot 0 is the sun (the moon at night), slots 1–3 the three
+              nearest dynamic lights, re-selected every frame.</li>
+          <li><b>Rotation in the vertex shader, parameter in a colour channel.</b>
+              <code>shadowVertexStage()</code> transforms 4 corners from a packed RGBA8:
+              R = angle (8-bit ⇒ ~1.4° steps, shown live), G = length, B = intensity, A = width.
+              No transform is ever touched.</li>
+          <li><b>Vertical distortion.</b> The ground plane is squashed (<code>squashY</code>), so a
+              rotation also reads as a distortion — push squash to 1.0 to see the pure rotation.</li>
+          <li><b>Per-object shadow sprites.</b> ~10 universal blobs (thin / thick / oval / tree /
+              human / fence …). The fence run shows the known weak spot for objects stretched
+              along one axis.</li>
+          <li><b>Nearest-3 query in Update().</b> Timed in the HUD; toggle the spatial grid to see
+              what the Jobs-system version would buy you.</li>
+        </ol>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<script type="module" src="./src/main.js"></script>
+</body>
+</html>

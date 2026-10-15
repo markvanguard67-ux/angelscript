@@ -11,8 +11,8 @@
  * normal map (RGB, z up).
  */
 
-import { clamp, hexToRgb, shade } from './util.js';
-import { bayer } from './framebuffer.js';
+import { clamp, hexToRgb, shade } from './util.js?v=r5';
+import { bayer } from './framebuffer.js?v=r5';
 
 export class PixelCanvas {
   constructor(w, h) {

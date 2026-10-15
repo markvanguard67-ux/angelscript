@@ -5,16 +5,14 @@
  * browser with `image-rendering: pixelated`, so every effect you see is real
  * per-pixel work in the JavaScript passes — there is no GPU in this prototype.
  */
-// Stamp shown in the HUD so a stale (cached) page is recognisable at a glance.
-const BUILD = 'r4 · grounded projection + state warnings';
 
 
-import { buildAssets } from './sprites.js';
-import { Scene } from './scene.js';
-import { Renderer } from './renderer.js';
-import { Light, LUT_STYLES } from './lighting.js';
-import { MAX_LIGHT_SHADOWS } from './shadows.js';
-import { clamp } from './util.js';
+import { buildAssets } from './sprites.js?v=r5';
+import { Scene } from './scene.js?v=r5';
+import { Renderer } from './renderer.js?v=r5';
+import { Light, LUT_STYLES } from './lighting.js?v=r5';
+import { MAX_LIGHT_SHADOWS } from './shadows.js?v=r5';
+import { BUILD, clamp } from './util.js?v=r5';
 
 const VIEW_W = 320;
 const VIEW_H = 180;

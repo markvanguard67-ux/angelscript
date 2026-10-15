@@ -10,9 +10,9 @@
  *    merge them with a script in a normal map."
  */
 
-import { PixelCanvas, spriteFromRows, makeGlowSprite } from './pixelart.js';
-import { clamp, mulberry32, valueNoise, shade as shadeRgb, hexToRgb } from './util.js';
-import { bayer } from './framebuffer.js';
+import { PixelCanvas, spriteFromRows, makeGlowSprite } from './pixelart.js?v=r5';
+import { clamp, mulberry32, valueNoise, shade as shadeRgb, hexToRgb } from './util.js?v=r5';
+import { bayer } from './framebuffer.js?v=r5';
 
 /* ------------------------------------------------------------------ palettes */
 

@@ -17,6 +17,31 @@ ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..')
 
 
 class Handler(http.server.SimpleHTTPRequestHandler):
+    def _version(self):
+        import hashlib
+        h = hashlib.md5()
+        roots = [os.path.join(ROOT, 'src'), ROOT]
+        names = []
+        for d in os.listdir(os.path.join(ROOT, 'src')):
+            names.append(os.path.join('src', d))
+        for n in ('index.html', 'styles.css'):
+            names.append(n)
+        for n in sorted(names):
+            st = os.stat(os.path.join(ROOT, n))
+            h.update(f'{n}:{st.st_mtime_ns}:{st.st_size}'.encode())
+        return h.hexdigest()[:12]
+
+    def do_GET(self):
+        if self.path.split('?')[0] == '/__version':
+            body = self._version().encode()
+            self.send_response(200)
+            self.send_header('Content-Type', 'text/plain')
+            self.send_header('Content-Length', str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+            return
+        super().do_GET()
+
     def end_headers(self):
         self.send_header('Cache-Control', 'no-store, must-revalidate, max-age=0')
         self.send_header('Pragma', 'no-cache')

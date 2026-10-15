@@ -14,14 +14,14 @@
  * Every pass is timed; the HUD shows where the frame budget goes.
  */
 
-import { FrameBuffer, bayer } from './framebuffer.js';
-import { ShadowSystem, MAX_LIGHT_SHADOWS } from './shadows.js';
-import { LutController, ambientColorGradient, ambientIntensity, verticalFacingFactor } from './lighting.js';
-import { buildTerrain } from './terrain.js';
-import { FogSystem } from './fog.js';
-import { makeShadowSet } from './pixelart.js';
-import { drawText } from './debugfont.js';
-import { clamp, lerp } from './util.js';
+import { FrameBuffer, bayer } from './framebuffer.js?v=r5';
+import { ShadowSystem, MAX_LIGHT_SHADOWS } from './shadows.js?v=r5';
+import { LutController, ambientColorGradient, ambientIntensity, verticalFacingFactor } from './lighting.js?v=r5';
+import { buildTerrain } from './terrain.js?v=r5';
+import { FogSystem } from './fog.js?v=r5';
+import { makeShadowSet } from './pixelart.js?v=r5';
+import { drawText } from './debugfont.js?v=r5';
+import { BUILD, clamp, lerp } from './util.js?v=r5';
 
 const TAU = Math.PI * 2;
 
@@ -708,6 +708,8 @@ export class Renderer {
       drawText(this.out, `SHADOW CONSTRUCTION OVERRIDE: ${this.settings.shadowStyle.toUpperCase()} (AUTO = PER-ASSET)`, 3, wy, [255, 190, 80], 240);
       wy += 7;
     }
+    const tag = BUILD;
+    drawText(this.out, tag, this.W - tag.length * 4 - 2, this.H - 7, [215, 220, 230], 120);
     const dbg = this.settings.debug;
     const s = this.scene;
     const out = this.out;

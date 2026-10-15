@@ -4,7 +4,7 @@
  * by (ambient + dynamic light) * shadow mask.
  */
 
-import { clamp, valueNoise, fbm, mulberry32 } from './util.js';
+import { clamp, valueNoise, fbm, mulberry32 } from './util.js?v=r5';
 
 export function buildTerrain(w, h, seed = 1337, opts = {}) {
   const albedo = new Uint8Array(w * h * 3);

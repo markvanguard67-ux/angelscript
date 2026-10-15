@@ -13,7 +13,7 @@
  * bands than their feet — exactly the effect in the article's screenshot.
  */
 
-import { clamp, lerp, smoothstep, hash2i } from './util.js';
+import { clamp, lerp, smoothstep, hash2i } from './util.js?v=r5';
 
 function tiledNoise(x, y, period, seed) {
   const xi = Math.floor(x), yi = Math.floor(y);

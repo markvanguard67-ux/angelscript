@@ -233,6 +233,23 @@
   </div>
 </div>
 
-<script type="module" src="./src/main.js"></script>
+<script type="module" src="./src/main.js?v=r5"></script>
+<script>
+  /* Live-reload heartbeat: if the served sources change, every open page
+     refreshes itself within a few seconds — no stale tab can survive. */
+  (async () => {
+    let base = null;
+    const probe = async () => {
+      const r = await fetch('/__version', { cache: 'no-store' });
+      if (!r.ok) return null;
+      return r.text();
+    };
+    try { base = await probe(); } catch (e) { return; }
+    if (!base) return;
+    setInterval(async () => {
+      try { const v = await probe(); if (v && v !== base) location.reload(); } catch (e) {}
+    }, 2500);
+  })();
+</script>
 </body>
 </html>

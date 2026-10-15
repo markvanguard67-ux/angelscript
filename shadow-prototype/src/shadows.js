@@ -35,7 +35,7 @@
  *        squash = the characteristic wobble of these shadows.
  */
 
-import { clamp } from './util.js';
+import { clamp } from './util.js?v=r5';
 
 export const TAU = Math.PI * 2;
 export const MAX_LIGHT_SHADOWS = 3;   // + 1 sun slot = the article's 4 shadows

@@ -7,7 +7,7 @@
  * the HUD, exactly like a real render profiler would.
  */
 
-import { clamp, hexToRgb } from './util.js';
+import { clamp, hexToRgb } from './util.js?v=r5';
 
 export class FrameBuffer {
   constructor(w, h, name = 'fb') {

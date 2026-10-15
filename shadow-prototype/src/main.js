@@ -5,6 +5,9 @@
  * browser with `image-rendering: pixelated`, so every effect you see is real
  * per-pixel work in the JavaScript passes — there is no GPU in this prototype.
  */
+// Stamp shown in the HUD so a stale (cached) page is recognisable at a glance.
+const BUILD = 'r3 · projection + self-shadow fix';
+
 
 import { buildAssets } from './sprites.js';
 import { Scene } from './scene.js';
@@ -282,6 +285,7 @@ export function startApp() {
   /* -------------------------------------------------------------- HUD wiring */
 
   const hud = {
+    build: $('#hud-build'),
     fps: $('#hud-fps'),
     frame: $('#hud-frame'),
     passes: $('#hud-passes'),
@@ -340,7 +344,8 @@ export function startApp() {
   function updateHud(stats, dt) {
     hudTick++;
     if (hudTick % 6 === 0) {
-      hud.fps.textContent = `${(1 / Math.max(dt, 0.0001)).toFixed(0)} fps`;
+      hud.build.textContent = BUILD;
+    hud.fps.textContent = `${(1 / Math.max(dt, 0.0001)).toFixed(0)} fps`;
       hud.frame.textContent = `${stats.frameMs.toFixed(2)} ms`;
       hud.time.textContent = `${timeLabel(scene.timeOfDay)} · ${scene.sun.isMoon ? 'moon' : 'sun'} ${(scene.sun.elevation * 180 / Math.PI).toFixed(0)}°`;
       hud.passes.innerHTML = PASS_NAMES

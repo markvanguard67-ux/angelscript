@@ -15,9 +15,15 @@ functions, which is exactly what makes the technique inspectable here.
 
 ```bash
 cd shadow-prototype
-python3 -m http.server 8080      # any static server works
+python3 tools/serve.py          # static server that sends Cache-Control: no-store
 # open http://localhost:8080
 ```
+
+`tools/serve.py` is plain `http.server` plus no-store headers: without them
+browsers apply heuristic freshness to the ES modules and can keep running old
+code after an update. The HUD shows a `build` stamp so a stale page is
+recognisable at a glance. Any other static server works too — just hard-reload
+after pulling changes.
 
 Headless smoke test + verification screenshots (writes `tools/shots/*.png`):
 

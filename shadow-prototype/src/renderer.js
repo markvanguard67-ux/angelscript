@@ -14,14 +14,14 @@
  * Every pass is timed; the HUD shows where the frame budget goes.
  */
 
-import { FrameBuffer, bayer } from './framebuffer.js?v=r5';
-import { ShadowSystem, MAX_LIGHT_SHADOWS } from './shadows.js?v=r5';
-import { LutController, ambientColorGradient, ambientIntensity, verticalFacingFactor } from './lighting.js?v=r5';
-import { buildTerrain } from './terrain.js?v=r5';
-import { FogSystem } from './fog.js?v=r5';
-import { makeShadowSet } from './pixelart.js?v=r5';
-import { drawText } from './debugfont.js?v=r5';
-import { BUILD, clamp, lerp } from './util.js?v=r5';
+import { FrameBuffer, bayer } from './framebuffer.js?v=r6';
+import { ShadowSystem, MAX_LIGHT_SHADOWS } from './shadows.js?v=r6';
+import { LutController, ambientColorGradient, ambientIntensity, verticalFacingFactor } from './lighting.js?v=r6';
+import { buildTerrain } from './terrain.js?v=r6';
+import { FogSystem } from './fog.js?v=r6';
+import { makeShadowSet } from './pixelart.js?v=r6';
+import { drawText } from './debugfont.js?v=r6';
+import { BUILD, clamp, lerp } from './util.js?v=r6';
 
 const TAU = Math.PI * 2;
 

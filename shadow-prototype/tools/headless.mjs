@@ -105,6 +105,8 @@ const shots = [
   ['27-chapel-morning-selfshadow', { timeOfDay: 0.40, keeperAt: [352, 148], settings: { selfShadow: true } }],
   ['28-chapel-morning-sunonly', { timeOfDay: 0.40, keeperAt: [352, 148], shadowCfg: { maxDynamic: 0 } }],
   ['29-chapel-morning-mask', { timeOfDay: 0.40, keeperAt: [352, 148], settings: { view: 'shadows' } }],
+  ['30-chapel-night', { timeOfDay: 0.85, keeperAt: [352, 148] }],
+  ['31-chapel-lampnight', { timeOfDay: 0.80, keeperAt: [352, 148] }],
 ];
 
 for (const [name, opts] of shots) shoot(name, opts);

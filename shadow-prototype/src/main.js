@@ -7,12 +7,12 @@
  */
 
 
-import { buildAssets } from './sprites.js?v=r5';
-import { Scene } from './scene.js?v=r5';
-import { Renderer } from './renderer.js?v=r5';
-import { Light, LUT_STYLES } from './lighting.js?v=r5';
-import { MAX_LIGHT_SHADOWS } from './shadows.js?v=r5';
-import { BUILD, clamp } from './util.js?v=r5';
+import { buildAssets } from './sprites.js?v=r6';
+import { Scene } from './scene.js?v=r6';
+import { Renderer } from './renderer.js?v=r6';
+import { Light, LUT_STYLES } from './lighting.js?v=r6';
+import { MAX_LIGHT_SHADOWS } from './shadows.js?v=r6';
+import { BUILD, clamp } from './util.js?v=r6';
 
 const VIEW_W = 320;
 const VIEW_H = 180;

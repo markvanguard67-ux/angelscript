@@ -6,9 +6,9 @@
  * object in this prototype.
  */
 
-import { Sun, Light, verticalFacingFactor } from './lighting.js?v=r5';
-import { ShadowCaster } from './shadows.js?v=r5';
-import { clamp, lerp, mulberry32, valueNoise } from './util.js?v=r5';
+import { Sun, Light, verticalFacingFactor } from './lighting.js?v=r6';
+import { ShadowCaster } from './shadows.js?v=r6';
+import { clamp, lerp, mulberry32, valueNoise } from './util.js?v=r6';
 
 export const WORLD_W = 480;
 export const WORLD_H = 260;

@@ -147,4 +147,4 @@ export function buildLutTable(lutData) {
 
 // Build stamp: shown in the HUD and drawn into the pixel buffer so any
 // screenshot reveals which code generation produced it.
-export const BUILD = 'r5 · versioned modules + live reload';
+export const BUILD = 'r6 · continuous point-light projection';

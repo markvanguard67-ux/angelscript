@@ -12,7 +12,7 @@
  *     the distance at a very quick rate."
  */
 
-import { clamp, lerp, smoothstep, makeGradient, LUT_SIZE, LUT_W, LUT_H } from './util.js?v=r5';
+import { clamp, lerp, smoothstep, makeGradient, LUT_SIZE, LUT_W, LUT_H } from './util.js?v=r6';
 
 /** 5-bit -> 8-bit expansion so a 32-step LUT still reaches pure white. */
 const Q5 = new Uint8Array(32);

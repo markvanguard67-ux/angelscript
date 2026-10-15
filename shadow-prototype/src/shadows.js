@@ -35,7 +35,7 @@
  *        squash = the characteristic wobble of these shadows.
  */
 
-import { clamp } from './util.js?v=r5';
+import { clamp } from './util.js?v=r6';
 
 export const TAU = Math.PI * 2;
 export const MAX_LIGHT_SHADOWS = 3;   // + 1 sun slot = the article's 4 shadows
@@ -457,6 +457,13 @@ export class ShadowSystem {
     const x0 = clip ? clip.x0 : 0, x1 = clip ? clip.x1 : W - 1;
     const y0 = clip ? clip.y0 : 0, y1 = clip ? clip.y1 : H - 1;
     const lastY = this._colY, touched = this._colTouched;
+    // per source-column previous landing, for row-to-row interpolation
+    let srcX = this._srcX, srcY = this._srcY;
+    if (!srcX || srcX.length < w) {
+      srcX = this._srcX = new Int16Array(w);
+      srcY = this._srcY = new Int16Array(w);
+    }
+    srcX.fill(-1, 0, w);
     let nT = 0, splats = 0;
     let tipVX = 0, tipVY = 0, tipAlt = -1;
 
@@ -477,14 +484,33 @@ export class ShadowSystem {
       const rowBase = py * w;
       for (let px = 0; px < w; px++) {
         const a0 = sd[rowBase * 4 + px * 4 + 3];
-        if (a0 === 0) continue;
+        if (a0 === 0) { srcX[px] = -1; continue; }
         // fake footprint depth: spread north with the distance from the centre,
         // otherwise a due-east sun collapses a billboard shadow into one line
         const dn = (px - pivot.x) * depthK;
         const sx = Math.round(baseSX + (px - pivot.x) + vx);
         const sy = Math.round(baseSY - (vy + dn) * sq);
-        if (sx < x0 || sx > x1) continue;
         const a = (a0 / 255) * alpha;
+        // Interpolate between this source column's previous and current
+        // landing. Point-light projection is hyperbolic in altitude, so
+        // consecutive rows can land many pixels apart horizontally; without
+        // the interpolation the shadow decomposes into stacked rectangles
+        // (the "staircase" artefact).
+        const px0 = srcX[px], py0 = srcY[px];
+        srcX[px] = sx; srcY[px] = sy;
+        if (px0 !== -1) {
+          const dx = sx - px0, dy = sy - py0;
+          const steps = Math.max(Math.abs(dx), Math.abs(dy));
+          for (let st = 1; st < steps; st++) {
+            const lx = px0 + Math.round((dx * st) / steps);
+            const lyv = py0 + Math.round((dy * st) / steps);
+            if (lx < x0 || lx > x1 || lyv < y0 || lyv > y1) continue;
+            const p = lyv * W + lx;
+            target[p] += a * (1 - target[p]);
+            splats++;
+          }
+        }
+        if (sx < x0 || sx > x1) continue;
         const ly = lastY[sx];
         if (ly === -1) {
           if (sy >= y0 && sy <= y1) {

@@ -136,6 +136,18 @@
           <small>on top of the 8-bit colour channel</small>
           <input type="range" min="0" max="45" step="1" data-bind="shadowCfg.angleQuantize">
         </label>
+        <label>shadow construction
+          <select data-bind="settings.shadowStyle">
+            <option value="auto">auto — sprites for props, projection for house/trees</option>
+            <option value="blob">rotating sprites only (exactly as shipped)</option>
+            <option value="project">silhouette projection for everything</option>
+          </select>
+        </label>
+        <label>projection depth <output data-out="shadowCfg.projectDepth"></output>
+          <small>fake footprint depth so side-lit shadows are not 1px lines</small>
+          <input type="range" min="0" max="1" step="0.01" data-bind="shadowCfg.projectDepth">
+        </label>
+        <label class="chk"><input type="checkbox" data-bind="settings.selfShadow"> self-shadowing (the old bug)</label>
         <label>shadow model
           <select data-bind="settings.shadowModel">
             <option value="sprite">sprite (black quads, as shipped)</option>

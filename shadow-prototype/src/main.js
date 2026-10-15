@@ -100,6 +100,8 @@ export function startApp() {
   $('#btn-reset').addEventListener('click', () => {
     scene.timeOfDay = 0.71; scene.paused = false;
     renderer.settings.view = 'final';
+    renderer.settings.shadowStyle = 'auto';
+    renderer.settings.selfShadow = false;
     renderer.settings.fog = 0.42;
     renderer.settings.shadowDarkness = 0.86;
     renderer.shadows.cfg.maxDynamic = MAX_LIGHT_SHADOWS;
@@ -394,6 +396,12 @@ export function startApp() {
     syncLabels();
   });
 
+  function styleOf(c) {
+    const mode = renderer.settings.shadowStyle;
+    const st = (mode === 'auto') ? (c.shadowStyle || 'blob') : mode;
+    return st === 'project' ? 'projected silhouette' : `${c.shadowKind} sprite`;
+  }
+
   function updateInspector() {
     const c = scene.selectedCaster;
     if (!c) {
@@ -416,7 +424,7 @@ export function startApp() {
       </tr>`;
     }).join('');
     inspectorEl.innerHTML = `
-      <div class="ihead"><b>${c.name}</b><span>${c.usedSlots}/4 shadows · ${c.shadowKind} sprite · h=${c.worldHeight | 0}</span></div>
+      <div class="ihead"><b>${c.name}</b><span>${c.usedSlots}/4 shadows · ${styleOf(c)} · h=${c.worldHeight | 0}</span></div>
       <table class="slots"><thead><tr><th>slot</th><th>vertex colour RGBA</th><th>angle</th><th>length</th><th>strength</th></tr></thead>
       <tbody>${rows}</tbody></table>`;
   }

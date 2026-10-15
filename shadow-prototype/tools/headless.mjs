@@ -42,6 +42,12 @@ function shoot(name, opts = {}) {
       : scene.casters.find((c) => c.name.startsWith('tomb_round'));
   }
   if (opts.moveKeeper) { scene.keeper.x += opts.moveKeeper[0]; scene.keeper.y += opts.moveKeeper[1]; }
+  if (opts.keeperAt) {
+    scene.keeper.x = opts.keeperAt[0]; scene.keeper.y = opts.keeperAt[1];
+    scene.keeper.patrol.manual = 99;
+    scene.camX = Math.max(0, Math.min(scene.w - W, scene.keeper.x - W * 0.5));
+    scene.camY = Math.max(0, Math.min(scene.h - H, scene.keeper.y - H * 0.55));
+  }
   if (opts.torch) scene.addLight(opts.torch[0], opts.torch[1], { z: 13, radius: 74, intensity: 1.3, color: [255, 168, 84], kind: 'torch', flicker: 0 });
 
   const frames = opts.frames ?? 3;
@@ -86,6 +92,11 @@ const shots = [
   ['14-physical', { timeOfDay: 0.70, settings: { shadowModel: 'physical' } }],
   ['15-light-radii', { timeOfDay: 0.70, debug: { lightRadii: true, grid: true, sunVector: true } }],
   ['16-one-shadow', { timeOfDay: 0.70, shadowCfg: { maxDynamic: 1 }, torch: [200, 205] }],
+  ['17-chapel-auto', { timeOfDay: 0.70, keeperAt: [330, 200] }],
+  ['18-chapel-blob', { timeOfDay: 0.70, keeperAt: [330, 200], settings: { shadowStyle: 'blob' } }],
+  ['19-chapel-project-all', { timeOfDay: 0.70, keeperAt: [330, 200], settings: { shadowStyle: 'project' } }],
+  ['20-chapel-selfshadow', { timeOfDay: 0.70, keeperAt: [330, 200], settings: { selfShadow: true } }],
+  ['21-trees-morning', { timeOfDay: 0.33, keeperAt: [150, 170] }],
 ];
 
 for (const [name, opts] of shots) shoot(name, opts);

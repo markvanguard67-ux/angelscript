@@ -63,8 +63,10 @@ export class Scene {
         strength: opts.strength ?? 1,
         castSunShadow: opts.castSunShadow !== false,
         castLightShadows: opts.castLightShadows !== false,
+        shadowStyle: (asset.shadow && asset.shadow.style) || 'blob',
       });
       o.caster = c;
+      c.object = o;                 // the shadow system resolves the live canvas
       this.casters.push(c);
     }
     this.objects.push(o);

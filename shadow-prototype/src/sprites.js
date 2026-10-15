@@ -43,6 +43,7 @@ const P_KEEPER = {
   c: ['#4e3d66', 0.60],
   C: ['#6b5588', 0.62],
   d: ['#382c4c', 0.55],
+  D: ['#2c2140', 0.52],
   s: ['#e0ac86', 0.60],
   E: ['#201426', 0.60],
   l: ['#8d97a6', 0.60],
@@ -680,25 +681,25 @@ export function buildAssets() {
     worldHeight: 20, shadow: { kind: 'thin', length: 1.05, width: 0.55 },
   });
   A.deadTree = defineSprite('dead_tree', makeDeadTree(3), {
-    worldHeight: 32, shadow: { kind: 'tree', length: 1.35, width: 1 }, sway: { amp: 0.5, power: 3 },
+    worldHeight: 32, shadow: { kind: 'tree', length: 1.35, width: 1, style: 'project' }, sway: { amp: 0.5, power: 3 },
   });
   A.deadTree2 = defineSprite('dead_tree2', makeDeadTree(9, 24, 30), {
-    worldHeight: 26, shadow: { kind: 'tree', length: 1.1, width: 0.85 }, sway: { amp: 0.6, power: 3 },
+    worldHeight: 26, shadow: { kind: 'tree', length: 1.1, width: 0.85, style: 'project' }, sway: { amp: 0.6, power: 3 },
   });
   A.oak = defineSprite('oak', makeLeafyTree(5), {
-    worldHeight: 34, shadow: { kind: 'tree', length: 1.5, width: 1.35 }, sway: { amp: 1.1, power: 2.5 },
+    worldHeight: 34, shadow: { kind: 'tree', length: 1.5, width: 1.35, style: 'project' }, sway: { amp: 1.1, power: 2.5 },
   });
   A.oak2 = defineSprite('oak2', makeLeafyTree(17, 26, 32), {
-    worldHeight: 28, shadow: { kind: 'tree', length: 1.25, width: 1.15 }, sway: { amp: 1.2, power: 2.5 },
+    worldHeight: 28, shadow: { kind: 'tree', length: 1.25, width: 1.15, style: 'project' }, sway: { amp: 1.2, power: 2.5 },
   });
   A.autumn = defineSprite('autumn', makeLeafyTree(23, 30, 36, true), {
-    worldHeight: 32, shadow: { kind: 'tree', length: 1.4, width: 1.3 }, sway: { amp: 1.3, power: 2.5 },
+    worldHeight: 32, shadow: { kind: 'tree', length: 1.4, width: 1.3, style: 'project' }, sway: { amp: 1.3, power: 2.5 },
   });
   A.pine = defineSprite('pine', makePine(11), {
-    worldHeight: 38, shadow: { kind: 'tree', length: 1.6, width: 1.1 }, sway: { amp: 0.4, power: 3 },
+    worldHeight: 38, shadow: { kind: 'tree', length: 1.6, width: 1.1, style: 'project' }, sway: { amp: 0.4, power: 3 },
   });
   A.chapel = defineSprite('chapel', makeChapel(21), {
-    worldHeight: 46, shadow: { kind: 'chapel', length: 1.7, width: 1.5 },
+    worldHeight: 46, shadow: { kind: 'chapel', length: 1.7, width: 1.5, style: 'project' },
   });
   A.oven = defineSprite('oven', makeOven(33), {
     worldHeight: 18, shadow: { kind: 'thick', length: 0.9, width: 1 },

@@ -42,6 +42,7 @@ export class Renderer {
     this.out = new FrameBuffer(this.W, this.H, 'out');
     this.lightBuf = new Float32Array(this.W * this.H * 3);
     this.coverage = new Float32Array(this.W * this.H);
+    this.ownCov = new Float32Array(this.W * this.H);   // caster's own slots only
     this.altBuf = new Uint8Array(this.W * this.H);
 
     this.caches = new Map();          // canvas -> Map(key -> {data, directShare})
@@ -53,6 +54,8 @@ export class Renderer {
     this.settings = {
       shadows: true,
       shadowModel: 'sprite',          // 'sprite' (article) | 'physical'
+      shadowStyle: 'auto',            // 'auto' | 'blob' | 'project'
+      selfShadow: false,              // let a caster darken itself (off = fixed)
       shadowDarkness: 0.86,
       normals: true,
       light3D: true,
@@ -225,8 +228,12 @@ export class Renderer {
       return;
     }
     this.shadows.cfg.squashY = this.squashY;
+    this.shadows.cfg.styleMode = this.settings.shadowStyle;
     const dir = s.sun.shadowDirection();
     s.shadowDir = dir;
+    // projection parameters for the sun: ground distance per altitude unit
+    this.shadows.sunDir = dir;
+    this.shadows.sunK = clamp(s.sun.shadowLength * 0.5, 0.3, 2.6) * this.shadows.cfg.sunShadowScale;
     this.shadows.assign(s.casters, s.lights, s.sun, dir);
     this.shadows.renderMask(s.casters, this.shadowSprites, this.coverage, this.W, this.H, this.camX, this.camY);
   }
@@ -323,7 +330,22 @@ export class Renderer {
       else if (view === 'normals') lit = this.normalView(canvas);
       else lit = this.lightSprite(o, canvas);
 
-      this.blitSprite(canvas, lit, dx, dy, o, asset, colorless);
+      // Own-shadow mask: a caster must not darken *itself* with its drop
+      // shadow — that belongs to the ground layer underneath it. We raster the
+      // caster's own slots into a scratch buffer clipped to its bbox and solve
+      //   others = 1 - (1 - total) / (1 - own)
+      // at blit time (exact inverse of the screen-blend accumulation).
+      let own = null;
+      if (!colorless && o.caster && this.settings.shadows && !this.settings.selfShadow) {
+        own = this.ownCov;
+        const clip = {
+          x0: Math.max(0, dx), x1: Math.min(this.W - 1, dx + canvas.w - 1),
+          y0: Math.max(0, dy), y1: Math.min(this.H - 1, dy + canvas.h - 1),
+        };
+        for (let yy = clip.y0; yy <= clip.y1; yy++) own.fill(0, yy * this.W + clip.x0, yy * this.W + clip.x1 + 1);
+        this.shadows.rasterCaster(o.caster, this.shadowSprites, own, this.W, this.H, camX, camY, clip);
+      }
+      this.blitSprite(canvas, lit, dx, dy, o, asset, colorless, own);
     }
   }
 
@@ -510,7 +532,7 @@ export class Renderer {
    * Blit a lit sprite: shadow mask multiply, wind deformation (per-scanline x
    * offset weighted by height) and the altitude buffer write used by the fog.
    */
-  blitSprite(canvas, lit, dx, dy, o, asset, altitudeOnly) {
+  blitSprite(canvas, lit, dx, dy, o, asset, altitudeOnly, ownCov) {
     const { W, H } = this;
     const d = this.out.data, cov = this.coverage, alt = this.altBuf;
     const w = canvas.w, h = canvas.h;
@@ -554,7 +576,15 @@ export class Renderer {
         const dstI = rowBase4 + dxx * 4;
         const si = sp * 4;
         let r = lit[si], g = lit[si + 1], b = lit[si + 2];
-        const c = cov[pp];
+        let c = cov[pp];
+        if (ownCov) {
+          const oc = ownCov[pp];
+          if (oc > 0.0001) {
+            const denom = 1 - oc;
+            c = denom > 0.02 ? 1 - (1 - c) / denom : Math.max(0, c - oc);
+            if (c < 0) c = 0; else if (c > 1) c = 1;
+          }
+        }
         if (c > 0 && !(em && em[sp])) {
           const k = 1 - c * share;
           r *= k; g *= k; b *= k;

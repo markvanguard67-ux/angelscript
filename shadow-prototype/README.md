@@ -28,7 +28,7 @@ after pulling changes.
 Headless smoke test + verification screenshots (writes `tools/shots/*.png`):
 
 ```bash
-node tools/headless.mjs          # 22 shots + sanity asserts
+node tools/headless.mjs          # 30 shots + sanity asserts
 node tools/headless.mjs --bench  # frame-time / cache / broad-phase benchmark
 ```
 
